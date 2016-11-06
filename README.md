@@ -57,7 +57,7 @@
 sudo apt update
 sudo apt -y install git
 sudo git clone https://github.com/naoki912/my-osa-script.git /opt/my-osa-script
-cd /opt/my-osa-scripts/scripts
+cd /opt/my-osa-script/scripts
 
 sudo ./scripts/init-common.sh
 
@@ -89,7 +89,7 @@ Ansibleで使用するssh公開鍵をcomputeにコピー
 sudo ssh-keygen
 sudo ssh-copy-id -i ~/.ssh/id_rsa ictsc@172.16.1.102
 
-cd /opt/my-osa-scripts/scripts
+cd /opt/my-osa-script/scripts
 sudo ./init-osa-controller.sh
 
 sudo python pw-token-gen.py --file /etc/openstack_deploy/user_secrets.yml
