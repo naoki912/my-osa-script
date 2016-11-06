@@ -74,8 +74,9 @@ sudo ./scripts/init-controller.sh
 cinder-volumes LVMを作成 (インストーラでmetadatasizeがどのように設定されているかわからないため)
 
 ```
-sudo pvcreate --metadatasize 2048 /dev/vdb7
-sudo vgcreate cinder-volumes /dev/vdb7
+# 場合によっては /dev/sdb になる
+sudo pvcreate --ff --metadatasize 2048 /dev/sda7
+sudo vgcreate cinder-volumes /dev/sda7
 
 # 確認
 sudo pvdisplay
@@ -87,13 +88,16 @@ Ansibleで使用するssh公開鍵をcomputeにコピー
 
 ```
 sudo ssh-keygen
-sudo ssh-copy-id -i ~/.ssh/id_rsa ictsc@172.16.1.102
+sudo ssh-copy-id -i /root/.ssh/id_rsa ictsc@172.16.1.102
+# ictsc-ucs-02側で実行
+sudo cp -r ~/.ssh/ /root/
 
 cd /opt/my-osa-script/scripts
 sudo ./init-osa-controller.sh
 
+cd /opt/openstack-ansible/scripts/
 sudo python pw-token-gen.py --file /etc/openstack_deploy/user_secrets.yml
-# user_secrets.yml の keystone_auth_admin_password 分かりやすいものに変更する
+# /etc/openstack_deploy/user_secrets.yml の keystone_auth_admin_password 分かりやすいものに変更する
 
 cd /opt/openstack-ansible/playbooks
 sudo openstack-ansible setup-hosts.yml
