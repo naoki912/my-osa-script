@@ -11,19 +11,19 @@ auto enp1s0f0
 iface enp1s0f0 inet manual
 
 # Container/Host management VLAN interface
-auto enp1s0f0.101
-iface enp1s0f0.101 inet manual
+auto enp1s0f0.11
+iface enp1s0f0.11 inet manual
     vlan-raw-device enp1s0f0
 
 # OpenStack Networking VXLAN (tunnel/overlay) VLAN interface
-auto enp1s0f0.103
-iface enp1s0f0.103 inet manual
+auto enp1s0f0.13
+iface enp1s0f0.13 inet manual
     vlan-raw-device enp1s0f0
 
 # Storage network VLAN interface (optional)
-#auto enp1s0f0.102
-#iface enp1s0f0.102 inet manual
-#    vlan-raw-device enp1s0f0
+auto enp1s0f0.12
+iface enp1s0f0.12 inet manual
+    vlan-raw-device enp1s0f0
 
 # Container/Host management bridge
 auto br-mgmt
@@ -31,8 +31,8 @@ iface br-mgmt inet static
     bridge_stp off
     bridge_waitport 0
     bridge_fd 0
-    bridge_ports enp1s0f0.101
-    address 172.16.4.112
+    bridge_ports enp1s0f0.11
+    address 172.16.11.2
     netmask 255.255.255.0
 
 # OpenStack Networking VXLAN (tunnel/overlay) bridge
@@ -55,8 +55,8 @@ iface br-vxlan inet static
     bridge_stp off
     bridge_waitport 0
     bridge_fd 0
-    bridge_ports enp1s0f0.103
-    address 172.16.6.115
+    bridge_ports enp1s0f0.13
+    address 172.16.13.1
     netmask 255.255.255.0
 
 # OpenStack Networking VLAN bridge
@@ -91,6 +91,6 @@ iface br-storage inet static
     bridge_stp off
     bridge_waitport 0
     bridge_fd 0
-    bridge_ports enp1s0f0.102
-    address 172.16.5.114
+    bridge_ports enp1s0f0.12
+    address 172.16.12.1
     netmask 255.255.255.0
