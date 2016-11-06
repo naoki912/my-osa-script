@@ -9,6 +9,6 @@
 #dns-nameservers 8.8.8.8 8.8.4.4
 #EOF
 
-cp ../files/ictsc-ucs-01.interfaces /etc/network/interfaces
+cp ../files/ictsc-ucs-02.interfaces /etc/network/interfaces
 
 reboot
