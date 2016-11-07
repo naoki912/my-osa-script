@@ -10,39 +10,14 @@
 * mirror -> Japan -> jp.archve.ubuntu.com
 * disk
   - ictsc-ucs-01 -> `Guided - use entire disk and set up LVM`
-  - ictsc-ucs-02
-    + 一度上と同じものを選択し、途中まで進めてパーティションを作成してから `Go Back` で `Manual` を選択
-    + `Configure the Logical Volume Manager` を選択
-    + `Delete volume group` でvolume groupを削除
-    + Finishで前のメニューに戻る
-    + `#5 logical` を選択し、`Delete the partition` で削除
-    + swapを作成する。 `pri/log 988.5 GB` -> `Create a new partition` -> `137.3GB` を入力
-      -> `Logical` -> `End` -> `Use as` から `swap area` を選択
-      -> `Done setting up the partition`
-    + rootを作成する。 `pri/log 861.2 GB` -> `Create a new partition` -> `50%` を入力
-      -> `Logical` -> `Beginning` -> `Use as` から `physical volume for LVM` を選択
-      -> `Done setting up the partition`
-    + cinder-volumes用LVMを作成する。 `pri/log 430.6 GB` -> `Create a new partition` -> デフォルトでEnter (430.6 GB)
-      -> `Logical` -> `Use as` から `physical volume for LVM` を選択
-      -> `Done setting up the partition`
-    + `Configure the Logical Volume Manager` を選択
-    + `Create volume group` -> `ictsc-ucs-02-vg` 入力 -> `/dev/sdb6` 選択
-    + `Create volume group` -> `cinder-volumes` 入力 -> `/dev/sdb7` 選択
-    + `Create logical volume` -> `ictsc-ucs-02-vg` -> `root` 入力 -> デフォルトでEnter
-    + `Finish`
-    + `LVM VG ictsc-ucs-02-vg, LV root .....` 内の `#1 430.6GB` を選択
-      -> `Use as` を `Ext4` -> `Mount Point` を `/` -> Label を `root` -> `Done setting up the partition`
-    + 終了
-    + ---
-    + ictsc-ucs-02 のディスクに最終的に出来るもの
-      ```
-      LVM VG ictsc-ucs-02-vg
-        #1 430.6 GB f ext4 /
-      #1 primary 510.7 MB K lvm
-      #6 logical 430.6 GB K lvm  // ictsc-ucs-02-vg, root など
-      #7 logical 430.6 GB K lvm  // cinder-volumes
-      #5 logical 137.3 GB f swap swap
-      ```
+  - ictsc-ucs-02 ->
+    ```
+    LVM VG ubuntu, LV root - 450.0 GB
+        #1 450.0 GB f ext4 /
+    #1 primary 450.0 GB K lvm (LVM VG ubuntu)
+    #2 primary 450.0 GB K lvm // インストール後に cinder-volumes に変更
+    #3 primary 99.0 GB f swap swap
+    ```
 * user
   - full name: None
   - name: ictsc
@@ -75,8 +50,8 @@ cinder-volumes LVMを作成 (インストーラでmetadatasizeがどのように
 
 ```
 # 場合によっては /dev/sdb になる
-sudo pvcreate --ff --metadatasize 2048 /dev/sda7
-sudo vgcreate cinder-volumes /dev/sda7
+sudo pvcreate --ff --metadatasize 2048 /dev/sda2
+sudo vgcreate cinder-volumes /dev/sda2
 
 # 確認
 sudo pvdisplay
