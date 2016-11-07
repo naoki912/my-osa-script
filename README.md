@@ -12,10 +12,8 @@
   - ictsc-ucs-01 -> `Guided - use entire disk and set up LVM`
   - ictsc-ucs-02 ->
     ```
-    LVM VG ubuntu, LV root - 450.0 GB
-        #1 450.0 GB f ext4 /
-    #1 primary 450.0 GB K lvm (LVM VG ubuntu)
-    #2 primary 450.0 GB K lvm // インストール後に cinder-volumes に変更
+    #1 primary 450.0 GB B f ext4 /
+    #2 primary 450.0 GB     // インストール後に cinder-volumes に変更
     #3 primary 99.0 GB f swap swap
     ```
 * user
