@@ -37,11 +37,11 @@ sudo apt -y install git
 sudo git clone https://github.com/naoki912/my-osa-script.git /opt/my-osa-script
 cd /opt/my-osa-script/scripts
 
-sudo ./scripts/init-common.sh
+./scripts/init-common.sh
 
 # 環境に合わせて実行
-sudo ./scripts/init-compute-interfaces.sh
-sudo ./scripts/init-controller-interfaces.sh
+./scripts/init-compute-interfaces.sh
+./scripts/init-controller-interfaces.sh
 
 # 勝手に再起動される
 ```
@@ -78,7 +78,7 @@ sudo ssh-copy-id -i /root/.ssh/id_rsa root@COMPUTE_NODE
 
 # OpenStack-Ansibleの準備
 cd /opt/my-osa-script/scripts
-sudo ./init-osa-controller.sh
+./init-osa-controller.sh
 
 cd /opt/openstack-ansible/scripts/
 sudo python pw-token-gen.py --file /etc/openstack_deploy/user_secrets.yml
