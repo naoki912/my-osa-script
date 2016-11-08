@@ -9,8 +9,13 @@
 * hostname -> ictsc-ucs-01,2
 * mirror -> Japan -> jp.archve.ubuntu.com
 * disk
-  - ictsc-ucs-01 -> `Guided - use entire disk and set up LVM`
-  - ictsc-ucs-02 ->
+  - ictsc-ucs-01
+    ```
+    #1 primary 450.0 GB B f ext4 /
+    #2 primary 450.0 GB     // インストール後に lxc に変更
+    #3 primary 99.0 GB f swap swap
+    ```
+  - ictsc-ucs-02
     ```
     #1 primary 450.0 GB B f ext4 /
     #2 primary 450.0 GB     // インストール後に cinder-volumes に変更
@@ -45,9 +50,9 @@ sudo ./scripts/init-controller-interfaces.sh
 
 ### Conpute
 
-cinder-volumes LVMを作成 (インストーラでmetadatasizeがどのように設定されているかわからないため)
 
 ```
+# cinder-volumes LVMを作成 (インストーラでmetadatasizeがどのように設定されているかわからないため)
 # 場合によっては /dev/sdb になる
 sudo pvcreate --ff --metadatasize 2048 /dev/sda2
 sudo vgcreate cinder-volumes /dev/sda2
@@ -58,14 +63,20 @@ sudo pvdisplay
 
 ### Controller
 
-Ansibleで使用するssh公開鍵をcomputeにコピー
-
 ```
-sudo ssh-keygen
-sudo ssh-copy-id -i /root/.ssh/id_rsa ictsc@172.16.1.102
-# ictsc-ucs-02側で実行
-sudo cp -r ~/.ssh/ /root/
+# lxc ボリュームを作成(オプション)
+# 場合によっては /dev/sdb になる
+sudo pvcreate --ff --metadatasize 2048 /dev/sda2
+sudo vgcreate lxc /dev/sda2
+# 確認
+sudo pvdisplay
 
+# Ansibleで使用するssh公開鍵をcomputeにコピー
+# 以下のコマンドそのままだとrootにssh出来ずに失敗するので、直接公開鍵をコピーするのが吉
+sudo ssh-keygen
+sudo ssh-copy-id -i /root/.ssh/id_rsa root@COMPUTE_NODE
+
+# OpenStack-Ansibleの準備
 cd /opt/my-osa-script/scripts
 sudo ./init-osa-controller.sh
 
@@ -73,6 +84,7 @@ cd /opt/openstack-ansible/scripts/
 sudo python pw-token-gen.py --file /etc/openstack_deploy/user_secrets.yml
 # /etc/openstack_deploy/user_secrets.yml の keystone_auth_admin_password 分かりやすいものに変更する
 
+# OpenStack-Ansibleの実行
 cd /opt/openstack-ansible/playbooks
 sudo openstack-ansible setup-hosts.yml
 sudo openstack-ansible setup-infrastructure.yml
