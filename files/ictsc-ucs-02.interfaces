@@ -8,22 +8,28 @@
 
 # Physical interface
 auto enp1s0f0
-iface enp1s0f0 inet manual
+iface enp1s0f0 inet static
+    address 172.16.1.102
+    netmask 255.255.255.0
+
+# Physical interface
+auto enp9s0
+iface enp9s0 inet manual
 
 # Container/Host management VLAN interface
-auto enp1s0f0.11
-iface enp1s0f0.11 inet manual
-    vlan-raw-device enp1s0f0
+auto enp9s0.11
+iface enp9s0.11 inet manual
+    vlan-raw-device enp9s0
 
 # OpenStack Networking VXLAN (tunnel/overlay) VLAN interface
-auto enp1s0f0.13
-iface enp1s0f0.13 inet manual
-    vlan-raw-device enp1s0f0
+auto enp9s0.13
+iface enp9s0.13 inet manual
+    vlan-raw-device enp9s0
 
 # Storage network VLAN interface (optional)
-auto enp1s0f0.12
-iface enp1s0f0.12 inet manual
-    vlan-raw-device enp1s0f0
+auto enp9s0.12
+iface enp9s0.12 inet manual
+    vlan-raw-device enp9s0
 
 # Container/Host management bridge
 auto br-mgmt
@@ -31,9 +37,11 @@ iface br-mgmt inet static
     bridge_stp off
     bridge_waitport 0
     bridge_fd 0
-    bridge_ports enp1s0f0.11
+    bridge_ports enp9s0.11
     address 172.16.11.2
     netmask 255.255.255.0
+    gateway 172.16.11.254
+    dns-nameservers 8.8.8.8 8.8.4.4
 
 # OpenStack Networking VXLAN (tunnel/overlay) bridge
 #
@@ -47,7 +55,7 @@ iface br-mgmt inet static
 #    bridge_stp off
 #    bridge_waitport 0
 #    bridge_fd 0
-#    bridge_ports enp1s0f0.103
+#    bridge_ports enp9s0.103
 
 # compute1 VXLAN (tunnel/overlay) bridge config
 auto br-vxlan
@@ -55,21 +63,17 @@ iface br-vxlan inet static
     bridge_stp off
     bridge_waitport 0
     bridge_fd 0
-    bridge_ports enp1s0f0.13
+    bridge_ports enp9s0.13
     address 172.16.13.1
     netmask 255.255.255.0
 
 # OpenStack Networking VLAN bridge
 auto br-vlan
-iface br-vlan inet static
+iface br-vlan inet manual
     bridge_stp off
     bridge_waitport 0
     bridge_fd 0
-    bridge_ports enp1s0f0
-    address 172.16.1.102
-    netmask 255.255.255.0
-    gateway 172.16.1.253
-    dns-nameservers 8.8.8.8 8.8.4.4
+    bridge_ports enp9s0
 
 # Storage bridge (optional)
 #
@@ -83,7 +87,7 @@ iface br-vlan inet static
 #    bridge_stp off
 #    bridge_waitport 0
 #    bridge_fd 0
-#    bridge_ports enp1s0f0.102
+#    bridge_ports enp9s0.102
 
 # compute1 Storage bridge
 auto br-storage
@@ -91,6 +95,6 @@ iface br-storage inet static
     bridge_stp off
     bridge_waitport 0
     bridge_fd 0
-    bridge_ports enp1s0f0.12
+    bridge_ports enp9s0.12
     address 172.16.12.1
     netmask 255.255.255.0
