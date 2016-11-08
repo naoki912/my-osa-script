@@ -35,8 +35,9 @@ cd /opt/my-osa-script/scripts
 sudo ./scripts/init-common.sh
 
 # 環境に合わせて実行
-sudo ./scripts/init-compute.sh
-sudo ./scripts/init-controller.sh
+sudo ./scripts/init-compute-interfaces.sh
+sudo ./scripts/init-controller-interfaces.sh
+
 # 勝手に再起動される
 ```
 
